@@ -12,6 +12,7 @@ public class Tile {
 	public int y;
 	public int[] coords;
 	public Color c = Color.red;
+	public TectonicPlate tectonicPlate = null;
 	Random rand = new Random();
 	
 	public Tile(int x, int y, int[] coords){

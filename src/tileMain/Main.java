@@ -14,6 +14,7 @@ public class Main extends ConstructorClass {
 	public static int defaultWidth = 800;
 	public static int defaultHeight = 800;
 	public static int[] nodes = new int[8];
+	public static TectonicPlate[] plates = new TectonicPlate[8];
 	public static Color[] nodeColor = new Color[]{new Color(0,196,0), new Color(0,179,0),new Color(0,162,0), new Color(0,128,0), new Color(0,0,196), new Color(0,0,179), new Color(0,0,196), new Color(0,0,196)};
 	public void doInitialization(int width, int height) {
 		this.setSize(defaultWidth,defaultHeight);
@@ -25,11 +26,19 @@ public class Main extends ConstructorClass {
 			}
 		}
 		
+		plates[0] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.RED);
+		plates[1] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.GREEN);
+		plates[2] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.BLUE);
+		plates[3] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.YELLOW);
+		plates[4] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.WHITE);
+		plates[5] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.ORANGE);
+		plates[6] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.CYAN);
+		plates[7] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.MAGENTA);
+		
 		// Pick 3 random nodes to start fill commands
 		System.out.println("Picking Nodes");
 		for(int i = 0; i<nodes.length; i++){
 			nodes[i] = pickRandomTile();
-			Tile.allTiles.get(nodes[i]).c = nodeColor[i];
 		}
 	
 		Tile.tilesToColor = Tile.allTiles.size();
@@ -38,29 +47,7 @@ public class Main extends ConstructorClass {
 		System.out.println("General Iteration");
 		while(Tile.tilesToColor > Tile.allTiles.size()*1/64){
 			for(int n = 0; n<nodes.length; n++){
-				boolean passed = false;
-				while(!passed){
-					int dir = rand.nextInt(4);
-					int newTile = nodes[n];
-					try{
-						switch(dir){
-							case 0: newTile = nodes[n] - (defaultWidth/Tile.size); break;
-							case 1: newTile = nodes[n] + 1; break;
-							case 2: newTile = nodes[n] + (defaultWidth/Tile.size); break;
-							case 3: newTile = nodes[n] - 1; break;
-						}
-						
-						if(Tile.allTiles.get(newTile).c == Color.red || Tile.allTiles.get(newTile).c == nodeColor[n]){
-							if(Tile.allTiles.get(newTile).c == Color.red){
-								Tile.tilesToColor--;
-							}
-							Tile.allTiles.get(newTile).c = nodeColor[n];
-							nodes[n] = newTile;
-							passed = true;
-						}
-						
-					}catch(IndexOutOfBoundsException e){};
-				}
+				plates[n].generalFillIteration();
 			}
 		}
 		
@@ -69,13 +56,14 @@ public class Main extends ConstructorClass {
 		while(Tile.tilesToColor >= 0){
 			int coordNum = -1;
 			for(int i = 0; i<Tile.allTiles.size();i++){
-				if(Tile.allTiles.get(i).c == Color.red){
+				if(Tile.allTiles.get(i).tectonicPlate == null){
 					coordNum = i;
+					System.out.println(Tile.tilesToColor);
 					break;
 				}
 			}
 			
-			if(coordNum == -1){
+			if(coordNum == -1 || coordNum == 0){
 				break;
 			}
 			
@@ -83,6 +71,7 @@ public class Main extends ConstructorClass {
 			while(!passed){
 				int dir = rand.nextInt(4);
 				int newTile = 0;
+				System.out.println(coordNum);
 				try{
 					switch(dir){
 						case 0: newTile = coordNum - (defaultWidth/Tile.size); break;
@@ -91,9 +80,9 @@ public class Main extends ConstructorClass {
 						case 3: newTile = coordNum - 1; break;
 					}
 					
-					if(!(Tile.allTiles.get(newTile).c == Color.red)){
+					if(!(Tile.allTiles.get(newTile).tectonicPlate == null)){
 						Tile.tilesToColor--;
-						Tile.allTiles.get(coordNum).c = Tile.allTiles.get(newTile).c;
+						Tile.allTiles.get(coordNum).tectonicPlate = Tile.allTiles.get(newTile).tectonicPlate;
 						passed = true;
 					}
 					
@@ -103,7 +92,7 @@ public class Main extends ConstructorClass {
 		
 		System.out.println("Adding noise");
 		for(int i = 0; i<Tile.allTiles.size(); i++){
-			Tile.allTiles.get(i).addNoise();
+			//Tile.allTiles.get(i).addNoise();
 		}
 	} // doInitialization
 
