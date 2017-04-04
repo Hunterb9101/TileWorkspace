@@ -1,0 +1,139 @@
+package tileMain;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.Random;
+
+//need for music and sound
+
+public class Main extends ConstructorClass {	
+	public static Random rand = new Random();
+	public static int defaultWidth = 800;
+	public static int defaultHeight = 800;
+	public static int[] nodes = new int[8];
+	public static Color[] nodeColor = new Color[]{new Color(0,196,0), new Color(0,179,0),new Color(0,162,0), new Color(0,128,0), new Color(0,0,196), new Color(0,0,179), new Color(0,0,196), new Color(0,0,196)};
+	public void doInitialization(int width, int height) {
+		this.setSize(defaultWidth,defaultHeight);
+		
+		System.out.println("Creating Tiles");
+		for(int row = 0; row<defaultHeight/Tile.size; row++){
+			for(int column = 0; column<defaultWidth/Tile.size; column++){
+				new Tile(column*Tile.size,row*Tile.size,new int[]{column,row});
+			}
+		}
+		
+		// Pick 3 random nodes to start fill commands
+		System.out.println("Picking Nodes");
+		for(int i = 0; i<nodes.length; i++){
+			nodes[i] = pickRandomTile();
+			Tile.allTiles.get(nodes[i]).c = nodeColor[i];
+		}
+	
+		Tile.tilesToColor = Tile.allTiles.size();
+		
+		//Iterate through first 90% of tiles
+		System.out.println("General Iteration");
+		while(Tile.tilesToColor > Tile.allTiles.size()*1/64){
+			for(int n = 0; n<nodes.length; n++){
+				boolean passed = false;
+				while(!passed){
+					int dir = rand.nextInt(4);
+					int newTile = nodes[n];
+					try{
+						switch(dir){
+							case 0: newTile = nodes[n] - (defaultWidth/Tile.size); break;
+							case 1: newTile = nodes[n] + 1; break;
+							case 2: newTile = nodes[n] + (defaultWidth/Tile.size); break;
+							case 3: newTile = nodes[n] - 1; break;
+						}
+						
+						if(Tile.allTiles.get(newTile).c == Color.red || Tile.allTiles.get(newTile).c == nodeColor[n]){
+							if(Tile.allTiles.get(newTile).c == Color.red){
+								Tile.tilesToColor--;
+							}
+							Tile.allTiles.get(newTile).c = nodeColor[n];
+							nodes[n] = newTile;
+							passed = true;
+						}
+						
+					}catch(IndexOutOfBoundsException e){};
+				}
+			}
+		}
+		
+		// Due to time constraints, the last 1/16 of tiles will be determined by the tiles next to them
+		System.out.println("Pick and Choose Iteration");
+		while(Tile.tilesToColor >= 0){
+			int coordNum = -1;
+			for(int i = 0; i<Tile.allTiles.size();i++){
+				if(Tile.allTiles.get(i).c == Color.red){
+					coordNum = i;
+					break;
+				}
+			}
+			
+			if(coordNum == -1){
+				break;
+			}
+			
+			boolean passed = false;
+			while(!passed){
+				int dir = rand.nextInt(4);
+				int newTile = 0;
+				try{
+					switch(dir){
+						case 0: newTile = coordNum - (defaultWidth/Tile.size); break;
+						case 1: newTile = coordNum + 1; break;
+						case 2: newTile = coordNum + (defaultWidth/Tile.size); break;
+						case 3: newTile = coordNum - 1; break;
+					}
+					
+					if(!(Tile.allTiles.get(newTile).c == Color.red)){
+						Tile.tilesToColor--;
+						Tile.allTiles.get(coordNum).c = Tile.allTiles.get(newTile).c;
+						passed = true;
+					}
+					
+				}catch(IndexOutOfBoundsException e){};
+			}
+		}
+		
+		System.out.println("Adding noise");
+		for(int i = 0; i<Tile.allTiles.size(); i++){
+			Tile.allTiles.get(i).addNoise();
+		}
+	} // doInitialization
+
+	// All drawing is done here //
+	synchronized public void drawFrame(Graphics g, int width, int height) {
+		this.setSize(defaultWidth,defaultHeight);
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, defaultWidth, defaultHeight);
+		for(int i = 0; i<Tile.allTiles.size();i++){
+			g.setColor(Tile.allTiles.get(i).c);
+			g.fillRect(Tile.allTiles.get(i).x,Tile.allTiles.get(i).y, Tile.size, Tile.size);
+		}
+	}
+
+	public void mousePressed(MouseEvent evt) {
+		super.mousePressed(evt);
+	}
+
+	public void keyPressed(KeyEvent evt) {	
+	}
+
+	public void keyReleased(KeyEvent evt){
+	}
+	
+	public int pickRandomTile(){
+		int x = rand.nextInt(defaultWidth/Tile.size);
+		int y = rand.nextInt(defaultHeight/Tile.size);
+		return x + (int)(y*(defaultWidth/Tile.size));
+	}
+}
+
+
+
