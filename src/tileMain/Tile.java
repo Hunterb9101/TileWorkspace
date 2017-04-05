@@ -7,11 +7,11 @@ import java.util.Random;
 public class Tile {
 	public static ArrayList<Tile> allTiles = new ArrayList<Tile>();
 	public static int tilesToColor = 0;
-	public static int size = 10;
+	public static int size = 2;
 	public int x;
 	public int y;
 	public int[] coords;
-	public Color c = Color.red;
+	public Color c = null;
 	public TectonicPlate tectonicPlate = null;
 	Random rand = new Random();
 	

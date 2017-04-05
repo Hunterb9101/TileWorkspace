@@ -14,8 +14,9 @@ public class Main extends ConstructorClass {
 	public static int defaultWidth = 800;
 	public static int defaultHeight = 800;
 	public static int[] nodes = new int[8];
+	public static boolean isDebug = false;
 	public static TectonicPlate[] plates = new TectonicPlate[8];
-	public static Color[] nodeColor = new Color[]{new Color(0,196,0), new Color(0,179,0),new Color(0,162,0), new Color(0,128,0), new Color(0,0,196), new Color(0,0,179), new Color(0,0,196), new Color(0,0,196)};
+	
 	public void doInitialization(int width, int height) {
 		this.setSize(defaultWidth,defaultHeight);
 		
@@ -26,14 +27,14 @@ public class Main extends ConstructorClass {
 			}
 		}
 		
-		plates[0] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.RED);
-		plates[1] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.GREEN);
-		plates[2] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.BLUE);
-		plates[3] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.YELLOW);
-		plates[4] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.WHITE);
-		plates[5] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.ORANGE);
-		plates[6] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.CYAN);
-		plates[7] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.MAGENTA);
+		plates[0] = new TectonicPlate(pickRandomTile(), rand.nextInt(11) - 5, Color.RED);
+		plates[1] = new TectonicPlate(pickRandomTile(), rand.nextInt(11) - 5, Color.GREEN);
+		plates[2] = new TectonicPlate(pickRandomTile(), rand.nextInt(11) - 5, Color.BLUE);
+		plates[3] = new TectonicPlate(pickRandomTile(), rand.nextInt(11) - 5, Color.YELLOW);
+		plates[4] = new TectonicPlate(pickRandomTile(), rand.nextInt(11) - 5, Color.WHITE);
+		plates[5] = new TectonicPlate(pickRandomTile(), rand.nextInt(11) - 5, Color.ORANGE);
+		plates[6] = new TectonicPlate(pickRandomTile(), rand.nextInt(11) - 5, Color.CYAN);
+		plates[7] = new TectonicPlate(pickRandomTile(), rand.nextInt(11) - 5, Color.MAGENTA);
 		
 		// Pick 3 random nodes to start fill commands
 		System.out.println("Picking Nodes");
@@ -46,7 +47,7 @@ public class Main extends ConstructorClass {
 		//Iterate through first 90% of tiles
 		System.out.println("General Iteration");
 		while(Tile.tilesToColor > Tile.allTiles.size()*1/64){
-			for(int n = 0; n<nodes.length; n++){
+			for(int n = 0; n<plates.length; n++){
 				plates[n].generalFillIteration();
 			}
 		}
@@ -90,9 +91,11 @@ public class Main extends ConstructorClass {
 			}
 		}
 		
+		TectonicPlate.assignHeightColor();
+		
 		System.out.println("Adding noise");
 		for(int i = 0; i<Tile.allTiles.size(); i++){
-			//Tile.allTiles.get(i).addNoise();
+			Tile.allTiles.get(i).addNoise();
 		}
 	} // doInitialization
 
@@ -102,7 +105,12 @@ public class Main extends ConstructorClass {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, defaultWidth, defaultHeight);
 		for(int i = 0; i<Tile.allTiles.size();i++){
-			g.setColor(Tile.allTiles.get(i).c);
+			if(isDebug){
+				g.setColor(Tile.allTiles.get(i).tectonicPlate.debugColor);
+			}
+			else{
+				g.setColor(Tile.allTiles.get(i).c);
+			}
 			g.fillRect(Tile.allTiles.get(i).x,Tile.allTiles.get(i).y, Tile.size, Tile.size);
 		}
 	}
