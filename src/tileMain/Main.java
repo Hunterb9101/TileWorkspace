@@ -14,7 +14,7 @@ public class Main extends ConstructorClass {
 	public static int defaultWidth = 800;
 	public static int defaultHeight = 800;
 	public static int[] nodes = new int[8];
-	public static TectonicPlate[] plates = new TectonicPlate[8];
+	public static FillPlate[] plates = new FillPlate[8];
 	public static Color[] nodeColor = new Color[]{new Color(0,196,0), new Color(0,179,0),new Color(0,162,0), new Color(0,128,0), new Color(0,0,196), new Color(0,0,179), new Color(0,0,196), new Color(0,0,196)};
 	public void doInitialization(int width, int height) {
 		this.setSize(defaultWidth,defaultHeight);
@@ -26,6 +26,7 @@ public class Main extends ConstructorClass {
 			}
 		}
 		
+		/*
 		plates[0] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.RED);
 		plates[1] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.GREEN);
 		plates[2] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.BLUE);
@@ -94,6 +95,10 @@ public class Main extends ConstructorClass {
 		for(int i = 0; i<Tile.allTiles.size(); i++){
 			//Tile.allTiles.get(i).addNoise();
 		}
+		
+		*/
+		
+		
 	} // doInitialization
 
 	// All drawing is done here //
