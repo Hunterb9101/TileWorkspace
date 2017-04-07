@@ -33,7 +33,7 @@ public class TectonicPlate {
 		this.nodeLocation = nodeLocation;
 		center = nodeLocation;
 		this.debugColor = debugColor;
-		Tile.allTiles.get(nodeLocation).tectonicPlate = this;
+		TileSquare.allTiles.get(nodeLocation).tectonicPlate = this;
 		this.elevation = elevation;
 	}
 	
@@ -44,18 +44,18 @@ public class TectonicPlate {
 			int newTile;
 			try{
 				switch(dir){
-					case 0: newTile = nodeLocation - (Main.defaultWidth/Tile.size); break;
+					case 0: newTile = nodeLocation - (MainSquare.defaultWidth/TileSquare.size); break;
 					case 1: newTile = nodeLocation + 1; break;
-					case 2: newTile = nodeLocation + (Main.defaultWidth/Tile.size); break;
+					case 2: newTile = nodeLocation + (MainSquare.defaultWidth/TileSquare.size); break;
 					case 3: newTile = nodeLocation - 1; break;
 					default: newTile = -1; break;
 				}
 				
-				if(Tile.allTiles.get(newTile).tectonicPlate == this || Tile.allTiles.get(newTile).tectonicPlate == null){
-					if(Tile.allTiles.get(newTile).tectonicPlate == null){
-						Tile.tilesToColor--;
+				if(TileSquare.allTiles.get(newTile).tectonicPlate == this || TileSquare.allTiles.get(newTile).tectonicPlate == null){
+					if(TileSquare.allTiles.get(newTile).tectonicPlate == null){
+						TileSquare.tilesToColor--;
 					}
-					Tile.allTiles.get(newTile).tectonicPlate = this;
+					TileSquare.allTiles.get(newTile).tectonicPlate = this;
 					nodeLocation = newTile;
 					passed = true;
 				}
@@ -65,11 +65,11 @@ public class TectonicPlate {
 	}
 	
 	public static void assignHeightColor(){
-		for(int i = 0; i<Tile.allTiles.size(); i++){
+		for(int i = 0; i<TileSquare.allTiles.size(); i++){
 			try{
-				Tile.allTiles.get(i).c = pallete[Tile.allTiles.get(i).tectonicPlate.elevation + 5];
+				TileSquare.allTiles.get(i).c = pallete[TileSquare.allTiles.get(i).tectonicPlate.elevation + 5];
 			}catch(NullPointerException e){
-				System.out.println(Tile.allTiles.get(i).tectonicPlate.elevation);
+				System.out.println(TileSquare.allTiles.get(i).tectonicPlate.elevation);
 			}
 		}
 	}
