@@ -6,7 +6,7 @@ public class Perlin {
 	float[][] generateWhiteNoise(int width, int height) {
 	    Random random = new Random(0);
 	    float[][] noise = new float[width][height];
-	 
+	    
 	    for (int i = 0; i < noise.length; i++) {
 	        for (int j = 0; j < noise[i].length; j++){
 	            noise[i][j] = (float)random.nextDouble();
@@ -19,7 +19,6 @@ public class Perlin {
 	float[][] generateSmoothNoise(float[][] baseNoise, int octave){
 		int width = baseNoise.length;
 		int height = baseNoise[0].length;
-	 
 		float[][] smoothNoise = baseNoise;
 	 
 		int samplePeriod = (int) Math.pow(2,octave); // calculates 2 ^ k
@@ -35,19 +34,16 @@ public class Perlin {
 	         int sample_j0 = (j / samplePeriod) * samplePeriod;
 	         int sample_j1 = (sample_j0 + samplePeriod) % height; //wrap around
 	         float vertical_blend = (j - sample_j0) * sampleFrequency;
-	         //blend the top two corners
+	         
 	         float top = interpolate(baseNoise[sample_i0][sample_j0],
 	            baseNoise[sample_i1][sample_j0], horizontal_blend);
 	 
-	         //blend the bottom two corners
 	         float bottom = interpolate(baseNoise[sample_i0][sample_j1],
 	            baseNoise[sample_i1][sample_j1], horizontal_blend);
 	 
-	         //final blend
 	         smoothNoise[i][j] = interpolate(top, bottom, vertical_blend);
 	      }
 	   }
-	 
 	   return smoothNoise;
 	}
 	
@@ -61,30 +57,35 @@ public class Perlin {
 	 
 	   float[][][] smoothNoise = new float[octaveCount][][]; //an array of 2D arrays containing
 	 
-	   float persistance = .5f;
+	   float persistance = 0.5f;
 	 
 	   //generate smooth noise
 	   for (int i = 0; i<octaveCount; i++) {
-		   System.out.println("Generating Smooth Noise: " + i);
 	       smoothNoise[i] = generateSmoothNoise(baseNoise, i);
 	   }
 	 
 	    float[][] perlinNoise = new float[width][height];
 	    float amplitude = 1.0f;
 	    float totalAmplitude = 0.0f;
-	 
 	    //blend noise together
+	    
+	    for (int i = 0; i < width; i++) {
+	          for (int j = 0; j < height; j++) {
+	             perlinNoise[i][j] = 0.0f;
+	          }
+	    }
+	    
 	    for (int octave = octaveCount - 1; octave >= 0; octave--) {
 	       amplitude *= persistance;
 	       totalAmplitude += amplitude;
-	       System.out.println("Adding smooth noise for octave: " + octave + " at amplitude: " + amplitude);
+	      
 	       for (int i = 0; i < width; i++) {
 	          for (int j = 0; j < height; j++) {
-	             perlinNoise[i][j] += smoothNoise[octave][i][j] * amplitude;
+	             perlinNoise[i][j] += smoothNoise[octave][i][j] * amplitude;             
 	          }
 	       }
 	    }
-	 
+	 	
 	   //normalization
 	   for (int i = 0; i < width; i++) {
 	      for (int j = 0; j < height; j++) {
@@ -94,15 +95,30 @@ public class Perlin {
 	   return perlinNoise;
 	}
 	
-	public float[][] printVals(float[][] baseNoise){
-		baseNoise = generatePerlinNoise(generateWhiteNoise(800,800),6);
-		for(int i = 0; i<baseNoise.length; i++){
-			String row = "";
-			for(int j = 0; j<baseNoise[i].length;j++){
-				row+= (int)(baseNoise[i][j]*255) + " ";
-			}
-			//System.out.println(row);
+	public float[][] generateMultiOctavePerlinNoise(int octaves, double persistence, double dropoff, int width, int height){
+		float[][][]noise = new float[octaves][width][height];
+		for(int i = octaves - 1; i > 0;i--){
+			noise[i] = generatePerlinNoise(generateWhiteNoise(width,height),octaves - i);
 		}
-		return baseNoise;
+		
+		float[][] multiOctave = new float[width][height];
+		float totalAmplitude = 0.0f;
+		for(int a= 0; a<noise.length; a++){
+			persistence*= dropoff;
+			totalAmplitude+=persistence;
+			for(int i = 0; i<multiOctave.length; i++){
+				for(int j = 0; j<multiOctave[i].length; j++){
+					multiOctave[i][j] += noise[a][i][j]*persistence;
+				}
+			}
+		}
+		
+		for (int i = 0; i < width; i++) {
+		      for (int j = 0; j < height; j++) {
+		         multiOctave[i][j] /= totalAmplitude;
+		      }
+		   }
+		return multiOctave;
+		
 	}
 }

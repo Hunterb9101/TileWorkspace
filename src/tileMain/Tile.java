@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class TileSquare {
-	public static ArrayList<TileSquare> allTiles = new ArrayList<TileSquare>();
+public class Tile {
+	public static ArrayList<Tile> allTiles = new ArrayList<Tile>();
 	public static int tilesToColor = 0;
 	public static int size = 1;
 	public int x;
@@ -15,7 +15,7 @@ public class TileSquare {
 	public TectonicPlate tectonicPlate = null;
 	Random rand = new Random();
 	
-	public TileSquare(int x, int y, int[] coords){
+	public Tile(int x, int y, int[] coords){
 		this.x = x;
 		this.y = y;
 		this.coords = coords;
@@ -40,6 +40,15 @@ public class TileSquare {
 		}
 		if(b<0){
 			b = 0;
+		}
+		if(r > 255){
+			r = 255;
+		}
+		if(g > 255){
+			g = 255;
+		}
+		if(b > 255){
+			b = 255;
 		}
 		c = new Color(r,g,b);
 	}
