@@ -3,7 +3,7 @@ package tileMain;
 import java.awt.Color;
 import java.util.Random;
 
-public class FillPlate {
+public class TectonicPlate {
 	public Random rand = new Random();
 	// Needed for Flood Fill
 	public int nodeLocation;
@@ -15,7 +15,7 @@ public class FillPlate {
 	public int magnitude;
 	public int angle;
 	
-	public FillPlate(int nodeLocation, int elevation, Color debugColor){
+	public TectonicPlate(int nodeLocation, int elevation, Color debugColor){
 		this.nodeLocation = nodeLocation;
 		center = nodeLocation;
 		this.debugColor = debugColor;

@@ -7,12 +7,12 @@ import java.util.Random;
 public class Tile {
 	public static ArrayList<Tile> allTiles = new ArrayList<Tile>();
 	public static int tilesToColor = 0;
-	public static int size = 10;
+	public static int size = 1;
 	public int x;
 	public int y;
 	public int[] coords;
-	public Color c = Color.red;
-	public FillPlate tectonicPlate = null;
+	public Color c = null;
+	public TectonicPlate tectonicPlate = null;
 	Random rand = new Random();
 	
 	public Tile(int x, int y, int[] coords){
@@ -40,6 +40,15 @@ public class Tile {
 		}
 		if(b<0){
 			b = 0;
+		}
+		if(r > 255){
+			r = 255;
+		}
+		if(g > 255){
+			g = 255;
+		}
+		if(b > 255){
+			b = 255;
 		}
 		c = new Color(r,g,b);
 	}

@@ -8,14 +8,13 @@ import java.awt.event.MouseEvent;
 import java.util.Random;
 
 //need for music and sound
-// Resetting Map
+
 public class Main extends ConstructorClass {	
-	public static Random rand = new Random();
+	Random rand = new Random();
 	public static int defaultWidth = 800;
 	public static int defaultHeight = 800;
-	public static int[] nodes = new int[8];
-	public static FillPlate[] plates = new FillPlate[8];
-	public static Color[] nodeColor = new Color[]{new Color(0,196,0), new Color(0,179,0),new Color(0,162,0), new Color(0,128,0), new Color(0,0,196), new Color(0,0,179), new Color(0,0,196), new Color(0,0,196)};
+	public static boolean isDebug = false;
+	
 	public void doInitialization(int width, int height) {
 		this.setSize(defaultWidth,defaultHeight);
 		
@@ -25,80 +24,44 @@ public class Main extends ConstructorClass {
 				new Tile(column*Tile.size,row*Tile.size,new int[]{column,row});
 			}
 		}
-		
-		/*
-		plates[0] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.RED);
-		plates[1] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.GREEN);
-		plates[2] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.BLUE);
-		plates[3] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.YELLOW);
-		plates[4] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.WHITE);
-		plates[5] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.ORANGE);
-		plates[6] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.CYAN);
-		plates[7] = new TectonicPlate(pickRandomTile(), rand.nextInt(10) - 5, Color.MAGENTA);
-		
-		// Pick 3 random nodes to start fill commands
-		System.out.println("Picking Nodes");
-		for(int i = 0; i<nodes.length; i++){
-			nodes[i] = pickRandomTile();
-		}
-	
-		Tile.tilesToColor = Tile.allTiles.size();
-		
-		//Iterate through first 90% of tiles
-		System.out.println("General Iteration");
-		while(Tile.tilesToColor > Tile.allTiles.size()*1/64){
-			for(int n = 0; n<nodes.length; n++){
-				plates[n].generalFillIteration();
-			}
-		}
-		
-		// Due to time constraints, the last 1/16 of tiles will be determined by the tiles next to them
-		System.out.println("Pick and Choose Iteration");
-		while(Tile.tilesToColor >= 0){
-			int coordNum = -1;
-			for(int i = 0; i<Tile.allTiles.size();i++){
-				if(Tile.allTiles.get(i).tectonicPlate == null){
-					coordNum = i;
-					System.out.println(Tile.tilesToColor);
-					break;
+
+		float[][] perlin = new Perlin().generateMultiOctavePerlinNoise(7, 1, .5, 800, 800);
+		for(int i = 0; i<perlin.length; i++){
+			for(int j = 0; j<perlin[i].length;j++){
+				perlin[i][j]= perlin[i][j]*2;
+				if(perlin[i][j] > 1){
+					perlin[i][j] = 1;
 				}
 			}
-			
-			if(coordNum == -1 || coordNum == 0){
-				break;
-			}
-			
-			boolean passed = false;
-			while(!passed){
-				int dir = rand.nextInt(4);
-				int newTile = 0;
-				System.out.println(coordNum);
-				try{
-					switch(dir){
-						case 0: newTile = coordNum - (defaultWidth/Tile.size); break;
-						case 1: newTile = coordNum + 1; break;
-						case 2: newTile = coordNum + (defaultWidth/Tile.size); break;
-						case 3: newTile = coordNum - 1; break;
-					}
-					
-					if(!(Tile.allTiles.get(newTile).tectonicPlate == null)){
-						Tile.tilesToColor--;
-						Tile.allTiles.get(coordNum).tectonicPlate = Tile.allTiles.get(newTile).tectonicPlate;
-						passed = true;
-					}
-					
-				}catch(IndexOutOfBoundsException e){};
-			}
 		}
 		
-		System.out.println("Adding noise");
+
+		for (int i = 0; i < perlin.length; i++) {
+	        for (int j = 0; j < perlin[i].length; j++){
+	        	if(perlin[i][j] < .5){
+	        		Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c =  Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c = Gradient.getColorAtPoint(new Color(0,0,196),new Color(0,0,96),(double)perlin[i][j],(double)0,(double).5);
+	        	}
+	        	else if(perlin[i][j] >= .5 && perlin[i][j] < .515){
+	        		 Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c= new Color(209,203,169);
+	        	}
+	        	else if(perlin[i][j] >= .515 && perlin[i][j] < .6){
+	        		 Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c= Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c = Gradient.getColorAtPoint(new Color(43,77,0),new Color(84,150,0),(float)perlin[i][j],(float).515,(float).6);
+	        	}
+	        	else if(perlin[i][j] >= .6 && perlin[i][j] < .65){
+	        		Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c= Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c = Gradient.getColorAtPoint(new Color(50,50,50),new Color(43,77,0),(float)perlin[i][j],(float).6,(float).65);
+	        	}
+	        	else if(perlin[i][j] >= .65 && perlin[i][j] < .8){
+	        		Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c= Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c = Gradient.getColorAtPoint(new Color(120,120,120),new Color(30,30,30),(float)perlin[i][j],(float).65,(float).8);
+	        	}
+	        	else{
+	        		Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c= new Color((int)(255*perlin[i][j]),(int)(255*perlin[i][j]),(int)(255*perlin[i][j]));
+	        	}
+	      
+	        }
+	    }
 		for(int i = 0; i<Tile.allTiles.size(); i++){
-			//Tile.allTiles.get(i).addNoise();
+			Tile.allTiles.get(i).addNoise();
 		}
-		
-		*/
-		
-		
 	} // doInitialization
 
 	// All drawing is done here //
@@ -107,7 +70,12 @@ public class Main extends ConstructorClass {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, defaultWidth, defaultHeight);
 		for(int i = 0; i<Tile.allTiles.size();i++){
-			g.setColor(Tile.allTiles.get(i).c);
+			if(isDebug){
+				g.setColor(Tile.allTiles.get(i).tectonicPlate.debugColor);
+			}
+			else{
+				g.setColor(Tile.allTiles.get(i).c);
+			}
 			g.fillRect(Tile.allTiles.get(i).x,Tile.allTiles.get(i).y, Tile.size, Tile.size);
 		}
 	}
