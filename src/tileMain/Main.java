@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.util.Random;
 
 //need for music and sound
-
+// Resetting Map
 public class Main extends ConstructorClass {	
 	public static Random rand = new Random();
 	public static int defaultWidth = 800;
