@@ -90,13 +90,17 @@ public class Perlin {
 	   for (int i = 0; i < width; i++) {
 	      for (int j = 0; j < height; j++) {
 	         perlinNoise[i][j] /= totalAmplitude;
+	         perlinNoise[i][j] = Math.abs(2*perlinNoise[i][j] - 1);
 	      }
 	   }
 	   return perlinNoise;
 	}
 	
-	public float[][] generateMultiOctavePerlinNoise(int octaves, double persistence, double dropoff, int width, int height){
+	// Octaves - # Continents, Noise Detail
+	// Dropoff - Size of landmasses/water
+	public float[][] generateMultiOctavePerlinNoise(int octaves, double dropoff, int width, int height){
 		float[][][]noise = new float[octaves][width][height];
+		double persistence = 1;
 		for(int i = octaves - 1; i > 0;i--){
 			noise[i] = generatePerlinNoise(generateWhiteNoise(width,height),octaves - i);
 		}
@@ -108,7 +112,7 @@ public class Perlin {
 			totalAmplitude+=persistence;
 			for(int i = 0; i<multiOctave.length; i++){
 				for(int j = 0; j<multiOctave[i].length; j++){
-					multiOctave[i][j] += noise[a][i][j]*persistence;
+					multiOctave[i][j] += (float)(noise[a][i][j])*(float)(persistence);
 				}
 			}
 		}

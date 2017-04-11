@@ -25,17 +25,35 @@ public class Main extends ConstructorClass {
 			}
 		}
 
-		float[][] perlin = new Perlin().generateMultiOctavePerlinNoise(7, 1, .5, 800, 800);
+		float[][] perlin = new Perlin().generateMultiOctavePerlinNoise(6, .35, 800, 800);
+		
 		for(int i = 0; i<perlin.length; i++){
-			for(int j = 0; j<perlin[i].length;j++){
-				perlin[i][j]= perlin[i][j]*2;
-				if(perlin[i][j] > 1){
-					perlin[i][j] = 1;
+			for(int j=0; j<perlin[i].length;j++){
+				/*
+				Color c = Color.GREEN;
+				try{
+					c = Gradient.getColorAtPoint(Color.black, Color.green, perlin[i][j], 0, 1);
 				}
+				catch(IllegalArgumentException e){
+					System.out.println(perlin[i][j]);
+				}
+				*/
+				if(perlin[i][j] < .2){
+					Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c =  Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c = Gradient.getColorAtPoint(new Color(120,120,120),new Color(60,60,60),(double)perlin[i][j],(double)0,(double).2);
+				}
+				if(perlin[i][j] > .2 && perlin[i][j] <= .5){
+			        Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c =  Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c = Gradient.getColorAtPoint(Color.white,new Color(60,60,60),(double)perlin[i][j],(double).2,(double).5);
+			    }
+			    if(perlin[i][j] > .5){
+			        Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c =  Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c = Gradient.getColorAtPoint(Color.white,Color.orange,(double)perlin[i][j],(double).5,(double)1);
+			    }
+	
+				//Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c= Tile.allTiles.get(i*(defaultWidth/Tile.size)+j).c = c;
+				
 			}
 		}
-		
-
+		System.out.println("FINISHED!!!");
+		/*
 		for (int i = 0; i < perlin.length; i++) {
 	        for (int j = 0; j < perlin[i].length; j++){
 	        	if(perlin[i][j] < .5){
@@ -59,9 +77,11 @@ public class Main extends ConstructorClass {
 	      
 	        }
 	    }
+	    
 		for(int i = 0; i<Tile.allTiles.size(); i++){
 			Tile.allTiles.get(i).addNoise();
 		}
+		*/
 	} // doInitialization
 
 	// All drawing is done here //
