@@ -3,8 +3,19 @@ package tileMain;
 import java.util.Random;
 
 public class Perlin {
+	
+	float[][] scaleNBias(float[][] baseNoise, double size,double bias){
+		 for (int i = 0; i < baseNoise.length; i++) {
+		        for (int j = 0; j < baseNoise[i].length; j++){
+		            baseNoise[i][j]= (float) Math.pow(baseNoise[i][j], 1/size);
+		            baseNoise[i][j]+=bias;
+		        }
+		    }
+		 return baseNoise;
+	}
+	
 	float[][] generateWhiteNoise(int width, int height) {
-	    Random random = new Random(0);
+	    Random random = new Random();
 	    float[][] noise = new float[width][height];
 	    
 	    for (int i = 0; i < noise.length; i++) {
@@ -51,7 +62,7 @@ public class Perlin {
 		return (float) ((float)(x0) * (float)(1 - alpha) + (float)(alpha * x1));
 	}
 	
-	float[][] generatePerlinNoise(float[][] baseNoise, int octaveCount) {
+	float[][] generateRidgedPerlinNoise(float[][] baseNoise, int octaveCount) {
 	   int width = baseNoise.length;
 	   int height = baseNoise[0].length;
 	 
@@ -90,11 +101,55 @@ public class Perlin {
 	   for (int i = 0; i < width; i++) {
 	      for (int j = 0; j < height; j++) {
 	         perlinNoise[i][j] /= totalAmplitude;
-	         perlinNoise[i][j] = Math.abs(2*perlinNoise[i][j] - 1);
+	         perlinNoise[i][j] = (float) Math.abs(2*perlinNoise[i][j] - 1);
 	      }
 	   }
 	   return perlinNoise;
 	}
+	
+	float[][] generatePerlinNoise(float[][] baseNoise, int octaveCount) {
+		   int width = baseNoise.length;
+		   int height = baseNoise[0].length;
+		 
+		   float[][][] smoothNoise = new float[octaveCount][][]; //an array of 2D arrays containing
+		 
+		   float persistance = 0.5f;
+		 
+		   //generate smooth noise
+		   for (int i = 0; i<octaveCount; i++) {
+		       smoothNoise[i] = generateSmoothNoise(baseNoise, i);
+		   }
+		 
+		    float[][] perlinNoise = new float[width][height];
+		    float amplitude = 1.0f;
+		    float totalAmplitude = 0.0f;
+		    //blend noise together
+		    
+		    for (int i = 0; i < width; i++) {
+		          for (int j = 0; j < height; j++) {
+		             perlinNoise[i][j] = 0.0f;
+		          }
+		    }
+		    
+		    for (int octave = octaveCount - 1; octave >= 0; octave--) {
+		       amplitude *= persistance;
+		       totalAmplitude += amplitude;
+		      
+		       for (int i = 0; i < width; i++) {
+		          for (int j = 0; j < height; j++) {
+		             perlinNoise[i][j] += smoothNoise[octave][i][j] * amplitude;             
+		          }
+		       }
+		    }
+		 	
+		   //normalization
+		   for (int i = 0; i < width; i++) {
+		      for (int j = 0; j < height; j++) {
+		         perlinNoise[i][j] /= totalAmplitude;
+		      }
+		   }
+		   return perlinNoise;
+		}
 	
 	// Octaves - # Continents, Noise Detail
 	// Dropoff - Size of landmasses/water
