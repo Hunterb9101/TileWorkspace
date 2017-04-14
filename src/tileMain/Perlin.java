@@ -180,4 +180,32 @@ public class Perlin {
 		return multiOctave;
 		
 	}
+	
+	public float[][] generateMultiOctaveRidgedPerlinNoise(int octaves, double dropoff, int width, int height){
+		float[][][]noise = new float[octaves][width][height];
+		double persistence = 1;
+		for(int i = octaves - 1; i > 0;i--){
+			noise[i] = generateRidgedPerlinNoise(generateWhiteNoise(width,height),octaves - i);
+		}
+		
+		float[][] multiOctave = new float[width][height];
+		float totalAmplitude = 0.0f;
+		for(int a= 0; a<noise.length; a++){
+			persistence*= dropoff;
+			totalAmplitude+=persistence;
+			for(int i = 0; i<multiOctave.length; i++){
+				for(int j = 0; j<multiOctave[i].length; j++){
+					multiOctave[i][j] += (float)(noise[a][i][j])*(float)(persistence);
+				}
+			}
+		}
+		
+		for (int i = 0; i < width; i++) {
+		      for (int j = 0; j < height; j++) {
+		         multiOctave[i][j] /= totalAmplitude;
+		      }
+		   }
+		return multiOctave;
+		
+	}
 }

@@ -27,21 +27,35 @@ public class Main extends ConstructorClass {
 			}
 		}
 
-		float[][] mountainousPerlin = new Perlin().generateMultiOctavePerlinNoise(8, .35, 800, 800);
-		mountainousPerlin = new Perlin().scaleNBias(mountainousPerlin, 1, .5);
+		float[][] mountainousPerlin = new Perlin().generateMultiOctaveRidgedPerlinNoise(8, .5, 800, 800);
+		mountainousPerlin = new Perlin().scaleNBias(mountainousPerlin, 1, .55);
 		
-		float[][] plainsPerlin = new Perlin().generateMultiOctavePerlinNoise(8, .35, 800, 800);
+		float[][] plainsPerlin = new Perlin().generateMultiOctavePerlinNoise(8, .5, 800, 800);
 		plainsPerlin = new Perlin().scaleNBias(plainsPerlin, .75, .25);
 		
-		float[][] seaPerlin = new Perlin().generateMultiOctavePerlinNoise(8, .35, 800, 800);
-		seaPerlin = new Perlin().scaleNBias(mountainousPerlin, .5, 0);
+		float[][] seaPerlin = new Perlin().generateMultiOctaveRidgedPerlinNoise(8, .5, 800, 800);
+		seaPerlin = new Perlin().scaleNBias(seaPerlin, .5,0);
 		
-		float[][] selectorPerlin = new Perlin().generateMultiOctavePerlinNoise(9, .4, 800, 800);
+		float[][] selectorPerlin = new Perlin().generateMultiOctavePerlinNoise(10, .5, 800, 800);
 		float[][] perlin = selectorPerlin;
 		
+		float[][] finalHeightMap = new float[selectorPerlin.length][selectorPerlin[0].length];
 		
-		Tile.setColors(ColorSchemes.NORMAL, mountainousPerlin);
-		System.out.println("FINISHED!!!");
+		for(int i = 0; i<perlin.length; i++){
+			for(int j = 0; j<perlin[i].length;j++){
+				if(perlin[i][j] < .22){
+					finalHeightMap[i][j] = seaPerlin[i][j];
+				}
+				else if(perlin[i][j] > .22 && perlin[i][j] < .28){
+					finalHeightMap[i][j] = plainsPerlin[i][j];
+				}
+				else{
+					finalHeightMap[i][j] = mountainousPerlin[i][j];
+				}
+			}
+		}
+		
+		Tile.setColors(ColorSchemes.NORMAL, finalHeightMap);
 		
 		for(int i = 0; i<Tile.allTiles.size(); i++){
 			Tile.allTiles.get(i).addNoise();
@@ -52,15 +66,9 @@ public class Main extends ConstructorClass {
 	// All drawing is done here //
 	synchronized public void drawFrame(Graphics g, int width, int height) {
 		this.setSize(defaultWidth,defaultHeight);
-		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, defaultWidth, defaultHeight);
 		for(int i = 0; i<Tile.allTiles.size();i++){
-			if(isDebug){
-				g.setColor(Tile.allTiles.get(i).tectonicPlate.debugColor);
-			}
-			else{
-				g.setColor(Tile.allTiles.get(i).c);
-			}
+			g.setColor(Tile.allTiles.get(i).c);
 			g.fillRect(Tile.allTiles.get(i).x,Tile.allTiles.get(i).y, Tile.size, Tile.size);
 		}
 	}
