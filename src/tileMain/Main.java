@@ -54,8 +54,29 @@ public class Main extends ConstructorClass {
 				}
 			}
 		}
-		
 		Tile.setColors(ColorSchemes.NORMAL, finalHeightMap);
+		
+		for(int i = 0; i<finalHeightMap.length; i++){
+			for(int j = 0; j<finalHeightMap[i].length;j++){			
+				try{
+					while
+					if(Math.abs(finalHeightMap[i][j] - finalHeightMap[i][j-1]) > .015){
+						finalHeightMap[i][j] = (finalHeightMap[i][j] - finalHeightMap[i][j-1])/2;
+					}
+					if(Math.abs(finalHeightMap[i][j] - finalHeightMap[i][j+1]) > .015){
+						finalHeightMap[i][j] = (finalHeightMap[i][j] - finalHeightMap[i][j+1])/2;
+					}
+					if(Math.abs(finalHeightMap[i+1][j] - finalHeightMap[i][j]) > .015){
+						finalHeightMap[i][j] = (finalHeightMap[i][j] - finalHeightMap[i+1][j])/2;
+					}
+					if(Math.abs(finalHeightMap[i-1][j] - finalHeightMap[i][j]) > .015){
+						Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
+						finalHeightMap[i][j] = (finalHeightMap[i][j] - finalHeightMap[i-1][j])/2;
+					}
+				}
+				catch(IndexOutOfBoundsException e){}
+			}
+		}
 		
 		for(int i = 0; i<Tile.allTiles.size(); i++){
 			Tile.allTiles.get(i).addNoise();
