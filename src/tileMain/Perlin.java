@@ -15,7 +15,7 @@ public class Perlin {
 	}
 	
 	float[][] generateWhiteNoise(int width, int height) {
-	    Random random = new Random();
+	    Random random = new Random(0);
 	    float[][] noise = new float[width][height];
 	    
 	    for (int i = 0; i < noise.length; i++) {

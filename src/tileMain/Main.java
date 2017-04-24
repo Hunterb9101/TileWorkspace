@@ -66,17 +66,17 @@ public class Main extends ConstructorClass {
 						}
 						if(Math.abs(finalHeightMap[i][j+1] - finalHeightMap[i][j]) > .015){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i][j+1])/2;
-							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.YELLOW;
+							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 					
 						}
 						if(Math.abs(finalHeightMap[i+1][j] - finalHeightMap[i][j]) > .015){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i+1][j])/2;
-							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.CYAN;
+							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 						
 						}
 						if(Math.abs(finalHeightMap[i-1][j] - finalHeightMap[i][j]) > .015){
-							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.MAGENTA;
-							//finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i-1][j])/2;
+							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
+							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i-1][j])/2;
 						
 						}
 					}
@@ -97,7 +97,7 @@ public class Main extends ConstructorClass {
 		g.fillRect(0, 0, defaultWidth, defaultHeight);
 		for(int i = 0; i<Tile.allTiles.size();i++){
 			g.setColor(Tile.allTiles.get(i).c);
-			g.fillRect(Tile.allTiles.get(i).x,Tile.allTiles.get(i).y, Tile.size, Tile.size);
+			g.fillRect(Tile.allTiles.get(i).sphericalX,Tile.allTiles.get(i).sphericalY, Tile.size, Tile.size);
 		}
 	}
 

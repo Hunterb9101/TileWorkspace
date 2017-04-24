@@ -8,8 +8,14 @@ public class Tile {
 	public static ArrayList<Tile> allTiles = new ArrayList<Tile>();
 	public static int tilesToColor = 0;
 	public static int size = 1;
+	
 	public int x;
 	public int y;
+	
+	public int sphericalX;
+	public int sphericalY;
+	public int sphericalZ;
+	
 	public int[] coords;
 	public Color c = null;
 	public enum ColorSchemes{NORMAL,HEIGHTDEBUG,PERLINSELECTOR};
@@ -20,6 +26,7 @@ public class Tile {
 		this.x = x;
 		this.y = y;
 		this.coords = coords;
+		generateSphericalCoords();
 		allTiles.add(this);
 	}
 	
@@ -104,4 +111,17 @@ public class Tile {
 			}
 		}
 	}
+	
+	public void generateSphericalCoords(){
+		int R = 400;
+		int S = 400;
+		
+		float longitude = (float)(this.x)/R;
+		float latitude = (float) (2*Math.atan(Math.exp((double)(this.y)/R)) - Math.PI/2);
+		sphericalX = (int) (S*Math.cos(latitude) * Math.cos(longitude)) + 300;
+		sphericalY = (int) (S*Math.cos(latitude) * Math.sin(longitude)) + 300;
+		sphericalZ = (int) (S*Math.sin(longitude));
+		//System.out.println(sphericalX + " " + sphericalY + " " + sphericalZ);
+	}
+	
 }
