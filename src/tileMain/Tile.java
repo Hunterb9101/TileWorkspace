@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+import floodFill.TectonicPlate;
+
 public class Tile {
 	public static ArrayList<Tile> allTiles = new ArrayList<Tile>();
 	public static int tilesToColor = 0;

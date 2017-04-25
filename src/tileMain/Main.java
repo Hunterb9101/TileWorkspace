@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 
+import noiseFunctions.Perlin;
 import tileMain.Tile.ColorSchemes;
 
 //need for music and sound
@@ -20,6 +21,11 @@ public class Main extends ConstructorClass {
 	public void doInitialization(int width, int height) {
 		this.setSize(defaultWidth,defaultHeight);
 		
+		/*Planet s = new Planet();
+		s.createMesh(6);
+
+		
+		s.draw(g);*/
 		System.out.println("Creating Tiles");
 		for(int row = 0; row<defaultHeight/Tile.size; row++){
 			for(int column = 0; column<defaultWidth/Tile.size; column++){

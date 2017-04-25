@@ -1,10 +1,10 @@
-package tileMain;
+package noiseFunctions;
 
 import java.util.Random;
 
 public class Perlin {
 	
-	float[][] scaleNBias(float[][] baseNoise, double size,double bias){
+	public float[][] scaleNBias(float[][] baseNoise, double size,double bias){
 		 for (int i = 0; i < baseNoise.length; i++) {
 		        for (int j = 0; j < baseNoise[i].length; j++){
 		            baseNoise[i][j]= (float) Math.pow(baseNoise[i][j], 1/size);
