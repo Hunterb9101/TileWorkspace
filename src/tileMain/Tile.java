@@ -121,7 +121,5 @@ public class Tile {
 		sphericalX = (int) (S*Math.cos(latitude) * Math.cos(longitude)) + 300;
 		sphericalY = (int) (S*Math.cos(latitude) * Math.sin(longitude)) + 300;
 		sphericalZ = (int) (S*Math.sin(longitude));
-		//System.out.println(sphericalX + " " + sphericalY + " " + sphericalZ);
 	}
-	
 }

@@ -59,22 +59,22 @@ public class Main extends ConstructorClass {
 		for(int i = 0; i<finalHeightMap.length; i++){
 			for(int j = 0; j<finalHeightMap[i].length;j++){		
 					try{
-						if(Math.abs(finalHeightMap[i][j-1] - finalHeightMap[i][j]) > .015){
+						if(Math.abs(finalHeightMap[i][j-1] - finalHeightMap[i][j]) > .028){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i][j-1])/2;
 							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 						
 						}
-						if(Math.abs(finalHeightMap[i][j+1] - finalHeightMap[i][j]) > .015){
+						if(Math.abs(finalHeightMap[i][j+1] - finalHeightMap[i][j]) > .028){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i][j+1])/2;
 							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 					
 						}
-						if(Math.abs(finalHeightMap[i+1][j] - finalHeightMap[i][j]) > .015){
+						if(Math.abs(finalHeightMap[i+1][j] - finalHeightMap[i][j]) > .028){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i+1][j])/2;
 							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 						
 						}
-						if(Math.abs(finalHeightMap[i-1][j] - finalHeightMap[i][j]) > .015){
+						if(Math.abs(finalHeightMap[i-1][j] - finalHeightMap[i][j]) > .028){
 							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i-1][j])/2;
 						
