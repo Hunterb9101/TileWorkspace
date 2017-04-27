@@ -61,10 +61,10 @@ public class Tile {
 	
 	public void generateSphericalCoords(){
 		int R = 400;
-		int S = 75;
+		int S = 125;
 		
 		float longitude = (float) ((float)(Math.PI*this.x)/R);
-		float latitude = (float) (8.8*Math.atan(Math.exp((float)(this.y)/R)));
+		float latitude = (float) (8.75*Math.atan(Math.exp((float)(this.y)/R)) + Math.PI/2);
 		sphericalX = (int) ((float)(S*Math.cos(latitude) * Math.cos(longitude))) + 600;
 		sphericalY = (int) (S*Math.cos(latitude) * Math.sin(longitude)) + 200;
 		sphericalZ = (int) (S*Math.sin(longitude)) + 300;

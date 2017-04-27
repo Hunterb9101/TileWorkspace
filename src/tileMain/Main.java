@@ -3,8 +3,10 @@ package tileMain;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Random;
 
 import noiseFunctions.Perlin;
@@ -16,16 +18,10 @@ public class Main extends ConstructorClass {
 	Random rand = new Random();
 	public static int defaultWidth = 800;
 	public static int defaultHeight = 800;
-	public static boolean isDebug = false;
-	
+
 	public void doInitialization(int width, int height) {
 		this.setSize(defaultWidth,defaultHeight);
 		
-		/*Planet s = new Planet();
-		s.createMesh(6);
-
-		
-		s.draw(g);*/
 		System.out.println("Creating Tiles");
 		TileGroup planet = new TileGroup();
 		for(int row = 0; row<defaultHeight/Tile.size; row++){
@@ -48,6 +44,8 @@ public class Main extends ConstructorClass {
 		
 		float[][] finalHeightMap = new float[selectorPerlin.length][selectorPerlin[0].length];
 		
+		ArrayList<Point> blurAreas = new ArrayList<Point>();
+		
 		for(int i = 0; i<perlin.length; i++){
 			for(int j = 0; j<perlin[i].length;j++){
 				if(perlin[i][j] < .22){
@@ -67,24 +65,20 @@ public class Main extends ConstructorClass {
 			for(int j = 0; j<finalHeightMap[i].length;j++){		
 					try{
 						if(Math.abs(finalHeightMap[i][j-1] - finalHeightMap[i][j]) > .028){
-							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i][j-1])/2;
-							//Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
-						
+							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i][j-1])/2;	
+							blurAreas.add(new Point(i,j));
 						}
 						if(Math.abs(finalHeightMap[i][j+1] - finalHeightMap[i][j]) > .028){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i][j+1])/2;
-							//Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
-					
+							blurAreas.add(new Point(i,j));
 						}
 						if(Math.abs(finalHeightMap[i+1][j] - finalHeightMap[i][j]) > .028){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i+1][j])/2;
-							//Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
-						
+							blurAreas.add(new Point(i,j));
 						}
 						if(Math.abs(finalHeightMap[i-1][j] - finalHeightMap[i][j]) > .028){
-							//Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i-1][j])/2;
-						
+							blurAreas.add(new Point(i,j));
 						}
 					}
 					catch(IndexOutOfBoundsException e){}
@@ -104,7 +98,7 @@ public class Main extends ConstructorClass {
 		g.fillRect(0, 0, defaultWidth, defaultHeight);
 		for(int i = 0; i<Tile.allTiles.size();i++){
 			g.setColor(Tile.allTiles.get(i).c);
-			g.fillRect(Tile.allTiles.get(i).sphericalX,Tile.allTiles.get(i).sphericalY, Tile.size, Tile.size);
+			g.fillRect(Tile.allTiles.get(i).x,Tile.allTiles.get(i).y, Tile.size, Tile.size);
 		}
 	}
 
@@ -118,10 +112,24 @@ public class Main extends ConstructorClass {
 	public void keyReleased(KeyEvent evt){
 	}
 	
-	public int pickRandomTile(){
-		int x = rand.nextInt(defaultWidth/Tile.size);
-		int y = rand.nextInt(defaultHeight/Tile.size);
-		return x + (int)(y*(defaultWidth/Tile.size));
+	public void gaussBlur_2 (scl, tcl, w, h, r) {
+	    var bxs = boxesForGauss(r, 3);
+	    boxBlur_2 (scl, tcl, w, h, (bxs[0]-1)/2);
+	    boxBlur_2 (tcl, scl, w, h, (bxs[1]-1)/2);
+	    boxBlur_2 (scl, tcl, w, h, (bxs[2]-1)/2);
+	}
+	public void boxBlur_2 (scl, tcl, w, h, r) {
+	    for(var i=0; i<h; i++)
+	        for(var j=0; j<w; j++) {
+	            var val = 0;
+	            for(var iy=i-r; iy<i+r+1; iy++)
+	                for(var ix=j-r; ix<j+r+1; ix++) {
+	                    var x = Math.min(w-1, Math.max(0, ix));
+	                    var y = Math.min(h-1, Math.max(0, iy));
+	                    val += scl[y*w+x];
+	                }
+	            tcl[i*w+j] = val/((r+r+1)*(r+r+1));
+	        }
 	}
 }
 

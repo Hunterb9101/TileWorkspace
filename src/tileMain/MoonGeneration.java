@@ -56,7 +56,7 @@ public class MoonGeneration extends ConstructorClass {
 			}
 		}
 		
-		planet.setColors(ColorSchemes.HEIGHTDEBUG, plainsPerlin);
+		planet.setColors(ColorSchemes.NORMAL, plainsPerlin);
 		stars.setColors(ColorSchemes.HEIGHTDEBUG, starPerlin);
 		
 	} // doInitialization
