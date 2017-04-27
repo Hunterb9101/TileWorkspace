@@ -27,9 +27,10 @@ public class Main extends ConstructorClass {
 		
 		s.draw(g);*/
 		System.out.println("Creating Tiles");
+		TileGroup planet = new TileGroup();
 		for(int row = 0; row<defaultHeight/Tile.size; row++){
 			for(int column = 0; column<defaultWidth/Tile.size; column++){
-				new Tile(column*Tile.size,row*Tile.size,new int[]{column,row});
+				planet.allTiles.add(new Tile(column*Tile.size,row*Tile.size,new int[]{column,row}));
 			}
 		}
 
@@ -60,28 +61,28 @@ public class Main extends ConstructorClass {
 				}
 			}
 		}
-		Tile.setColors(ColorSchemes.NORMAL, finalHeightMap);
+		planet.setColors(ColorSchemes.NORMAL, finalHeightMap);
 		
 		for(int i = 0; i<finalHeightMap.length; i++){
 			for(int j = 0; j<finalHeightMap[i].length;j++){		
 					try{
 						if(Math.abs(finalHeightMap[i][j-1] - finalHeightMap[i][j]) > .028){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i][j-1])/2;
-							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
+							//Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 						
 						}
 						if(Math.abs(finalHeightMap[i][j+1] - finalHeightMap[i][j]) > .028){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i][j+1])/2;
-							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
+							//Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 					
 						}
 						if(Math.abs(finalHeightMap[i+1][j] - finalHeightMap[i][j]) > .028){
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i+1][j])/2;
-							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
+							//Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 						
 						}
 						if(Math.abs(finalHeightMap[i-1][j] - finalHeightMap[i][j]) > .028){
-							Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
+							//Tile.allTiles.get(i*finalHeightMap[i].length+ j).c = Color.RED;
 							finalHeightMap[i][j] = (finalHeightMap[i][j] + finalHeightMap[i-1][j])/2;
 						
 						}
