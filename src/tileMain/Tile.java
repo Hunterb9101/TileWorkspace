@@ -64,7 +64,7 @@ public class Tile {
 		int S = 125;
 		
 		float longitude = (float) ((float)(Math.PI*this.x)/R);
-		float latitude = (float) (8.75*Math.atan(Math.exp((float)(this.y)/R)) + Math.PI/2);
+		float latitude = (float) (8.75*Math.atan(Math.exp((float)(this.y)/R)));
 		sphericalX = (int) ((float)(S*Math.cos(latitude) * Math.cos(longitude))) + 600;
 		sphericalY = (int) (S*Math.cos(latitude) * Math.sin(longitude)) + 200;
 		sphericalZ = (int) (S*Math.sin(longitude)) + 300;

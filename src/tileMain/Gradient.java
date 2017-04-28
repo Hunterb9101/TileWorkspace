@@ -15,4 +15,9 @@ public class Gradient {
 		int b = (int)(a.getBlue() * p + c.getBlue() * (1-p));
 		return new Color(r,g,b);
 	}
+	
+	public static double getValueAtPoint(float a, float b, float x, float lowVal, float highVal){
+		double p = (x-lowVal)/(highVal-lowVal);
+		return (double)(b*p + a*(1-p));
+	}
 }
