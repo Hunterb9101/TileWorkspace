@@ -19,17 +19,16 @@ public class Main extends ConstructorClass {
 	public static int defaultWidth = 800;
 	public static int defaultHeight = 800;
 	TileGroup planet = new TileGroup();
+	TileGroup clouds = new TileGroup();
 	public void doInitialization(int width, int height) {
 		this.setSize(defaultWidth,defaultHeight);
 		
-		System.out.println("Creating Tiles");
 		for(int row = 0; row<defaultHeight/Tile.size; row++){
 			for(int column = 0; column<defaultWidth/Tile.size; column++){
 				planet.allTiles.add(new Tile(column*Tile.size,row*Tile.size,new int[]{column,row}));
 			}
 		}
 		
-		TileGroup clouds = new TileGroup();
 		for(int row = 0; row<defaultHeight/Tile.size; row++){
 			for(int column = 0; column<defaultWidth/Tile.size; column++){
 				clouds.allTiles.add(new Tile(column*Tile.size,row*Tile.size,new int[]{column,row}));
@@ -69,9 +68,10 @@ public class Main extends ConstructorClass {
 			}
 		}
 		planet.setColors(ColorSchemes.NORMAL, finalHeightMap);
+		clouds.setColors(ColorSchemes.NORMAL, mountainousPerlin);
 		
-		for(int i = 0; i<Tile.allTiles.size(); i++){
-			Tile.allTiles.get(i).addNoise();
+		for(int i = 0; i<planet.allTiles.size(); i++){
+			planet.allTiles.get(i).addNoise();
 		}
 		
 	} // doInitialization
@@ -82,7 +82,13 @@ public class Main extends ConstructorClass {
 		g.fillRect(0, 0, defaultWidth, defaultHeight);
 		for(int i = 0; i<planet.allTiles.size();i++){
 			g.setColor(planet.allTiles.get(i).c);
-			g.fillRect(planet.allTiles.get(i).x,planet.allTiles.get(i).y, Tile.size, Tile.size);
+			g.fillRect(planet.allTiles.get(i).sphericalX,planet.allTiles.get(i).sphericalY, Tile.size, Tile.size);
+		}
+		
+		for(int i = 0; i<clouds.allTiles.size();i++){
+				g.setColor(clouds.allTiles.get(i).c);
+				g.fillRect(clouds.allTiles.get(i).sphericalX,clouds.allTiles.get(i).sphericalY, Tile.size, Tile.size);
+			
 		}
 	}
 
